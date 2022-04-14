@@ -1,3 +1,3 @@
-# oasys-staking-cli
+# oasys-pos-cli
 
-Command Line Tool for staking management of Oasys Blockchain.
+Command Line Tool for manage proof-of-stake of Oasys Blockchain.
