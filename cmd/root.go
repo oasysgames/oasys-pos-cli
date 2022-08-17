@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/oasysgames/oasys-pos-cli/cmd/crypto"
+	"github.com/oasysgames/oasys-pos-cli/cmd/staker"
 	"github.com/oasysgames/oasys-pos-cli/cmd/validator"
 	"github.com/spf13/cobra"
 )
@@ -13,7 +14,7 @@ const (
 	versionMajor = 1
 	versionMinor = 0
 	versionPatch = 0
-	versionMeta  = "alpha0"
+	versionMeta  = "alpha1"
 )
 
 var rootCmd = &cobra.Command{
@@ -36,5 +37,6 @@ func Execute() {
 
 func init() {
 	validator.AddCommand(rootCmd)
+	staker.AddCommand(rootCmd)
 	crypto.AddCommand(rootCmd)
 }

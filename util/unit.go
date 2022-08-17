@@ -1,4 +1,4 @@
-package ethutil
+package util
 
 import (
 	"fmt"
@@ -43,4 +43,14 @@ func ToDigit(n *big.Int) string {
 		i2++
 	}
 	return res
+}
+
+// Adjust units and separate by 3 digits.
+func FormatWei(amount *big.Int) string {
+	if amount.Cmp(Ether) > 0 {
+		return ToDigit(ToEther(amount)) + " OAS"
+	} else if amount.Cmp(GWei) > 0 {
+		return ToDigit(ToGWei(amount)) + " GWei"
+	}
+	return ToDigit(amount) + " Wei"
 }

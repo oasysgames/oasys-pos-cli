@@ -1,9 +1,10 @@
-package validator
+package staker
 
 import (
 	"context"
 	"errors"
 	"fmt"
+	"math/big"
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -15,11 +16,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var joinCmd = &cobra.Command{
-	Use:   cmdPrefix + "join",
-	Short: "Join as a validator in the proof-of-stake.",
+var stakeCmd = &cobra.Command{
+	Use:   cmdPrefix + "stake",
+	Short: "Stake tokens to validator.",
 	Run: func(cmd *cobra.Command, args []string) {
-		operator, err := cmd.Flags().GetString(constants.OperatorFlag)
+		validator, err := cmd.Flags().GetString(constants.ValidatorFlag)
+		if err != nil {
+			util.Fatal(err)
+		}
+
+		amount, err := cmd.Flags().GetString(constants.AmountFlag)
 		if err != nil {
 			util.Fatal(err)
 		}
@@ -29,11 +35,11 @@ var joinCmd = &cobra.Command{
 			util.Fatal(err)
 		}
 
-		doJoin(wallet, operator)
+		doStake(wallet, validator, amount)
 	},
 }
 
-func doJoin(wallet *eth.Wallet, operator string) {
+func doStake(wallet *eth.Wallet, validator string, amount string) {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(constants.RpcTimeout))
 	defer cancel()
 
@@ -47,17 +53,34 @@ func doJoin(wallet *eth.Wallet, operator string) {
 		util.Fatal(err)
 	}
 
-	result, err := stakemanager.GetValidatorInfo(wallet.GetCallOpts(ctx), wallet.From)
+	to := common.HexToAddress(validator)
+	result, err := stakemanager.GetValidatorInfo(wallet.GetCallOpts(ctx), to)
 	if err != nil {
 		util.Fatal(err)
 	}
 
-	to := common.HexToAddress(operator)
-	if result.Operator == to {
-		util.Fatal(errors.New("already joined"))
+	if result.Operator == (common.Address{}) {
+		util.Fatal(errors.New("validator is not join"))
 	}
 
-	tx, err := stakemanager.JoinValidator(txOpts, to)
+	token := uint8(0)
+	bamount, ok := new(big.Int).SetString(amount, 10)
+	if !ok {
+		util.Fatal(err)
+	}
+
+	txOpts.Value = new(big.Int).Mul(bamount, util.Ether)
+
+	balance, err := wallet.Client.BalanceAt(ctx, to, nil)
+	if err != nil {
+		util.Fatal(err)
+	}
+
+	if balance.Cmp(txOpts.Value) == -1 {
+		util.Fatal(errors.New("insufficient funds"))
+	}
+
+	tx, err := stakemanager.Stake(txOpts, to, token, txOpts.Value)
 	if err != nil {
 		util.Fatal(err)
 	}

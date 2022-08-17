@@ -19,7 +19,7 @@ Name:
   Copyright 2022 Oasys | Blockchain for The Games All Rights Reserved.
   
 Version:
-  1.0.0-alpha0
+  1.0.0-alpha1
 
 Usage:
   oaspos [command]
@@ -28,6 +28,8 @@ Available Commands:
   completion                       Generate the autocompletion script for the specified shell
   crypto:create-account            Create a new account.
   help                             Help about any command
+  staker:stake                     Stake tokens to validator.
+  staker:unstake                   Unstake tokens from validator.
   validator:activate               Change the validator status to active.
   validator:claim-commissions      Withdraw validator commissions.
   validator:deactivate             Change the validator status to disable.
@@ -53,11 +55,11 @@ Usage:
 
 ```shell
 # For mainnet
-$ oaspos validator:[command] --network mainnet [flags]
+$ oaspos validator:[subcommand] --network mainnet [flags]
 
 # For testnet
-$ oaspos validator:[command] --network testnet [flags]
+$ oaspos validator:[subcommand] --network testnet [flags]
 
 # For custom
-$ oaspos validator:[command] --rpc https://example.com/ --chain-id 12345 [flags]
+$ oaspos validator:[subcommand] --rpc https://example.com/ --chain-id 12345 [flags]
 ```
