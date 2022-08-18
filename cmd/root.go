@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/spf13/cobra"
+
 	"github.com/oasysgames/oasys-pos-cli/cmd/crypto"
 	"github.com/oasysgames/oasys-pos-cli/cmd/staker"
 	"github.com/oasysgames/oasys-pos-cli/cmd/validator"
-	"github.com/spf13/cobra"
 )
 
 const (

@@ -1,8 +1,9 @@
 package staker
 
 import (
-	"github.com/oasysgames/oasys-pos-cli/cmd/constants"
 	"github.com/spf13/cobra"
+
+	"github.com/oasysgames/oasys-pos-cli/cmd/constants"
 )
 
 const (
