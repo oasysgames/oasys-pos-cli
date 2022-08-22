@@ -19,7 +19,7 @@ Name:
   Copyright 2022 Oasys | Blockchain for The Games All Rights Reserved.
   
 Version:
-  1.0.0-alpha1
+  1.0.0-alpha2
 
 Usage:
   oaspos [command]
@@ -36,6 +36,7 @@ Available Commands:
   validator:info                   Show validator information.
   validator:join                   Join as a validator in the proof-of-stake.
   validator:update-commission-rate Update validator commission rates.
+  validator:update-operator        Update the block signing address.
 
 Flags:
   -h, --help   help for oaspos

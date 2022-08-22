@@ -15,7 +15,7 @@ const (
 	versionMajor = 1
 	versionMinor = 0
 	versionPatch = 0
-	versionMeta  = "alpha1"
+	versionMeta  = "alpha2"
 )
 
 var rootCmd = &cobra.Command{
