@@ -18,6 +18,7 @@ var (
 		activateCmd,
 		deactivateCmd,
 		updateCommissionRateCmd,
+		updateOperatorCmd,
 		claimCommissionsCmd,
 	}
 )
@@ -52,6 +53,11 @@ func AddCommand(rootCmd *cobra.Command) {
 	rootCmd.AddCommand(updateCommissionRateCmd)
 	updateCommissionRateCmd.Flags().Int64(constants.RateFlag, 0, "New commission rates(0% ~ 100%). Default is 0.")
 	updateCommissionRateCmd.MarkFlagRequired(constants.RateFlag)
+
+	// validator:update-operator
+	rootCmd.AddCommand(updateOperatorCmd)
+	updateOperatorCmd.Flags().String(constants.OperatorFlag, "", "New address used for block signing.")
+	updateOperatorCmd.MarkFlagRequired(constants.OperatorFlag)
 
 	// validator:claim-commissions
 	rootCmd.AddCommand(claimCommissionsCmd)
