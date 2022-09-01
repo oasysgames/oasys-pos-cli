@@ -15,6 +15,7 @@ var (
 	commands = []*cobra.Command{
 		joinCmd,
 		infoCmd,
+		infoAllCmd,
 		activateCmd,
 		deactivateCmd,
 		updateCommissionRateCmd,
@@ -40,6 +41,10 @@ func AddCommand(rootCmd *cobra.Command) {
 	// validator:info
 	rootCmd.AddCommand(infoCmd)
 	infoCmd.Flags().String(constants.ValidatorFlag, "", "Address of the validator owner. Default is transaction sender.")
+
+	// validator:info-all
+	rootCmd.AddCommand(infoAllCmd)
+	infoAllCmd.Flags().Bool(constants.NextEpochFlag, false, "Display the next epoch.")
 
 	// validator:activate
 	rootCmd.AddCommand(activateCmd)

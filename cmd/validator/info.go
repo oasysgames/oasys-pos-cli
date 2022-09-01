@@ -22,22 +22,18 @@ var infoCmd = &cobra.Command{
 	Use:   cmdPrefix + "info",
 	Short: "Show validator information.",
 	Run: func(cmd *cobra.Command, args []string) {
-		validator, err := cmd.Flags().GetString(constants.ValidatorFlag)
-		if err != nil {
+		var validator common.Address
+		if s, err := cmd.Flags().GetString(constants.ValidatorFlag); err != nil {
 			utils.Fatal(err)
-		}
-
-		var to common.Address
-		if validator != "" {
-			to = common.HexToAddress(validator)
+		} else if s != "" {
+			validator = common.HexToAddress(s)
 		} else {
-			wallet, err := cmdutils.NewEthWallet(cmd)
-			if err == nil {
-				to = wallet.From
+			if wallet, err := cmdutils.NewEthWallet(cmd); err == nil {
+				validator = wallet.From
 			}
 		}
 
-		if to == (common.Address{}) {
+		if validator == (common.Address{}) {
 			utils.Fatal(errors.New("private key or validator address is required"))
 		}
 
@@ -46,11 +42,11 @@ var infoCmd = &cobra.Command{
 			utils.Fatal(err)
 		}
 
-		doInfo(ec, to)
+		doInfo(ec, validator)
 	},
 }
 
-func doInfo(ec *ethclient.Client, to common.Address) {
+func doInfo(ec *ethclient.Client, validator common.Address) {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(constants.RpcTimeout))
 	defer cancel()
 
@@ -66,28 +62,23 @@ func doInfo(ec *ethclient.Client, to common.Address) {
 		utils.Fatal(err)
 	}
 
-	balance, err := ec.BalanceAt(ctx, to, nil)
-	if err != nil {
-		utils.Fatal(err)
-	}
-
 	currentEpoch, err := environment.Epoch(callOpts)
 	if err != nil {
 		utils.Fatal(err)
 	}
 	nextEpoch := new(big.Int).Add(currentEpoch, common.Big1)
 
-	currentInfo, err := stakermanager.GetValidatorInfo(callOpts, to)
+	currentInfo, err := stakermanager.GetValidatorInfo(callOpts, validator)
 	if err != nil {
 		utils.Fatal(err)
 	}
 
-	nextInfo, err := stakermanager.GetValidatorInfo0(callOpts, to, nextEpoch)
+	nextInfo, err := stakermanager.GetValidatorInfo0(callOpts, validator, nextEpoch)
 	if err != nil {
 		utils.Fatal(err)
 	}
 
-	commissions, err := stakermanager.GetCommissions(callOpts, to, common.Big0)
+	commissions, err := stakermanager.GetCommissions(callOpts, validator, common.Big0)
 	if err != nil {
 		utils.Fatal(err)
 	}
@@ -99,7 +90,6 @@ func doInfo(ec *ethclient.Client, to common.Address) {
 
 	joined := currentInfo.Operator != common.Address{}
 
-	fmt.Printf("%s : %s\n", rightPad("Balance"), utils.FormatWei(balance))
 	fmt.Printf("%s : %s\n", rightPad("Joined"), b2s(joined))
 	fmt.Printf("%s : %s\n", rightPad("Status"), status)
 	fmt.Printf("%s : %s\n", rightPad("Jailed"), b2s(currentInfo.Jailed))

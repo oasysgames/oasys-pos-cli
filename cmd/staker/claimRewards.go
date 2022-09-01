@@ -2,9 +2,7 @@ package staker
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"math/big"
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -17,9 +15,9 @@ import (
 	"github.com/oasysgames/oasys-pos-cli/utils"
 )
 
-var unstakeCmd = &cobra.Command{
-	Use:   cmdPrefix + "unstake",
-	Short: "Unstake tokens from validator.",
+var claimRewardsCmd = &cobra.Command{
+	Use:   cmdPrefix + "claim-rewards",
+	Short: "Withdraw staking rewards.",
 	Run: func(cmd *cobra.Command, args []string) {
 		wallet, err := cmdutils.NewEthWallet(cmd)
 		if err != nil {
@@ -31,16 +29,11 @@ var unstakeCmd = &cobra.Command{
 			utils.Fatal(err)
 		}
 
-		tokenType, amount, err := parseAmountFlag(cmd)
-		if err != nil {
-			utils.Fatal(err)
-		}
-
-		doUnstake(wallet, validator, tokenType, amount)
+		doClaimRewards(wallet, validator)
 	},
 }
 
-func doUnstake(wallet *eth.Wallet, validator common.Address, tokenType uint8, amount int64) {
+func doClaimRewards(wallet *eth.Wallet, validator common.Address) {
 	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(constants.RpcTimeout))
 	defer cancel()
 
@@ -54,16 +47,7 @@ func doUnstake(wallet *eth.Wallet, validator common.Address, tokenType uint8, am
 		utils.Fatal(err)
 	}
 
-	result, err := stakemanager.GetValidatorInfo(wallet.GetCallOpts(ctx), validator)
-	if err != nil {
-		utils.Fatal(err)
-	}
-	if result.Operator == (common.Address{}) {
-		utils.Fatal(errors.New("validator is not join"))
-	}
-
-	bamount := new(big.Int).Mul(utils.Ether, big.NewInt(amount))
-	tx, err := stakemanager.Unstake(txOpts, validator, tokenType, bamount)
+	tx, err := stakemanager.ClaimRewards(txOpts, validator, common.Big0)
 	if err != nil {
 		utils.Fatal(err)
 	}

@@ -47,10 +47,11 @@ func ToDigit(n *big.Int) string {
 
 // Adjust units and separate by 3 digits.
 func FormatWei(amount *big.Int) string {
-	if amount.Cmp(Ether) > 0 {
-		return ToDigit(ToEther(amount)) + " OAS"
-	} else if amount.Cmp(GWei) > 0 {
+	if amount.Cmp(Ether) >= 0 {
+		return ToDigit(ToEther(amount)) + " Ether"
+	} else if amount.Cmp(GWei) >= 0 {
 		return ToDigit(ToGWei(amount)) + " GWei"
+	} else {
+		return ToDigit(amount) + " Wei"
 	}
-	return ToDigit(amount) + " Wei"
 }
