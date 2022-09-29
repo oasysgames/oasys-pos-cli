@@ -60,7 +60,7 @@ func doDeactivate(wallet *eth.Wallet, validator string) {
 	nextEpoch := new(big.Int).Add(currentEpoch, common.Big1)
 
 	to := common.HexToAddress(validator)
-	result, err := stakemanager.GetValidatorInfo(wallet.GetCallOpts(ctx), to)
+	result, err := stakemanager.GetValidatorInfo(wallet.GetCallOpts(ctx), to, nextEpoch)
 	if err != nil {
 		utils.Fatal(err)
 	} else if !result.Active {

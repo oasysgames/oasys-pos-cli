@@ -52,7 +52,7 @@ func doStakes(ec *ethclient.Client, staker common.Address, showNextEpoch bool) {
 		utils.Fatal(err)
 	}
 
-	stakermanager, err := contracts.NewStakeManager(ec)
+	stakemanager, err := contracts.NewStakeManager(ec)
 	if err != nil {
 		utils.Fatal(err)
 	}
@@ -65,28 +65,44 @@ func doStakes(ec *ethclient.Client, staker common.Address, showNextEpoch bool) {
 		epoch.Add(epoch, common.Big1)
 	}
 
-	validators := []common.Address{}
-	stakes := map[common.Address]map[uint8]*big.Int{}
-	total := map[uint8]*big.Int{}
-	for i, tt := range tokenTypes {
+	var (
+		validators = []common.Address{}
+		stakes     = map[common.Address]map[uint8]*big.Int{}
+		total      = map[uint8]*big.Int{}
+
+		cursor  = big.NewInt(0)
+		howMany = big.NewInt(200)
+	)
+	for _, tt := range tokenTypes {
 		if total[tt] == nil {
 			total[tt] = new(big.Int)
 		}
-
-		result, err := stakermanager.GetStakerStakes(callOpts, staker, tt, epoch)
+	}
+	for {
+		result, err := stakemanager.GetStakerStakes(callOpts, staker, epoch, cursor, howMany)
 		if err != nil {
 			utils.Fatal(err)
 		}
-		if i == 0 {
-			validators = append(validators, result.Validators...)
+		if len(result.Validators) == 0 {
+			break
 		}
+
+		cursor = result.NewCursor
+		validators = append(validators, result.Validators...)
 
 		for i, validator := range result.Validators {
 			if stakes[validator] == nil {
 				stakes[validator] = map[uint8]*big.Int{}
 			}
-			stakes[validator][tt] = result.Stakes[i]
-			total[tt].Add(total[tt], result.Stakes[i])
+			oas, woas, soas := result.OasStakes[i], result.WoasStakes[i], result.SoasStakes[i]
+
+			stakes[validator][OASty] = oas
+			stakes[validator][WOASty] = woas
+			stakes[validator][SOASty] = soas
+
+			total[OASty].Add(total[OASty], oas)
+			total[WOASty].Add(total[WOASty], woas)
+			total[SOASty].Add(total[SOASty], soas)
 		}
 	}
 

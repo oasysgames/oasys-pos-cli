@@ -15,7 +15,6 @@ const (
 	versionMajor = 1
 	versionMinor = 0
 	versionPatch = 0
-	versionMeta  = "alpha3"
 )
 
 var rootCmd = &cobra.Command{
@@ -26,7 +25,7 @@ var rootCmd = &cobra.Command{
   Copyright 2022 Oasys | Blockchain for The Games All Rights Reserved.
   
 Version:
-  %d.%d.%d-%s`, versionMajor, versionMinor, versionPatch, versionMeta),
+  %d.%d.%d`, versionMajor, versionMinor, versionPatch),
 }
 
 func Execute() {

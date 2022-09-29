@@ -48,7 +48,7 @@ func doJoin(wallet *eth.Wallet, operator string) {
 		utils.Fatal(err)
 	}
 
-	result, err := stakemanager.GetValidatorInfo(wallet.GetCallOpts(ctx), wallet.From)
+	result, err := stakemanager.GetValidatorInfo(wallet.GetCallOpts(ctx), wallet.From, common.Big0)
 	if err != nil {
 		utils.Fatal(err)
 	}

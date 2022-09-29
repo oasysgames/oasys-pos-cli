@@ -18,7 +18,6 @@ var (
 		infoAllCmd,
 		activateCmd,
 		deactivateCmd,
-		updateCommissionRateCmd,
 		updateOperatorCmd,
 		claimCommissionsCmd,
 	}
@@ -53,11 +52,6 @@ func AddCommand(rootCmd *cobra.Command) {
 	// validator:deactivate
 	rootCmd.AddCommand(deactivateCmd)
 	deactivateCmd.Flags().String(constants.ValidatorFlag, "", "Address of the validator. Default is transaction sender.")
-
-	// validator:update-commission-rate
-	rootCmd.AddCommand(updateCommissionRateCmd)
-	updateCommissionRateCmd.Flags().Int64(constants.RateFlag, 0, "New commission rates(0% ~ 100%). Default is 0.")
-	updateCommissionRateCmd.MarkFlagRequired(constants.RateFlag)
 
 	// validator:update-operator
 	rootCmd.AddCommand(updateOperatorCmd)

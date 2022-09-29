@@ -54,7 +54,7 @@ func doUnstake(wallet *eth.Wallet, validator common.Address, tokenType uint8, am
 		utils.Fatal(err)
 	}
 
-	result, err := stakemanager.GetValidatorInfo(wallet.GetCallOpts(ctx), validator)
+	result, err := stakemanager.GetValidatorInfo(wallet.GetCallOpts(ctx), validator, common.Big0)
 	if err != nil {
 		utils.Fatal(err)
 	}

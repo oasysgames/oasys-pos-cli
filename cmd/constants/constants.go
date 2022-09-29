@@ -21,7 +21,6 @@ const (
 	OASFlag       = "oas"
 	WOASFlag      = "woas"
 	SOASFlag      = "soas"
-	RateFlag      = "rate"
 	NextEpochFlag = "next-epoch"
 
 	// Hub-Layer(L1)

@@ -46,12 +46,12 @@ func doClaimCommissions(wallet *eth.Wallet, validator string) {
 		utils.Fatal(err)
 	}
 
-	stakermanager, err := contracts.NewStakeManager(wallet.Client)
+	stakemanager, err := contracts.NewStakeManager(wallet.Client)
 	if err != nil {
 		utils.Fatal(err)
 	}
 
-	tx, err := stakermanager.ClaimCommissions(txOpts, common.HexToAddress(validator), common.Big0)
+	tx, err := stakemanager.ClaimCommissions(txOpts, common.HexToAddress(validator), common.Big0)
 	if err != nil {
 		utils.Fatal(err)
 	}

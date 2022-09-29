@@ -51,7 +51,7 @@ func doStake(wallet *eth.Wallet, validator common.Address, tokenType uint8, amou
 	}
 
 	// check validator joined.
-	result, err := stakemanager.GetValidatorInfo(wallet.GetCallOpts(ctx), validator)
+	result, err := stakemanager.GetValidatorInfo(wallet.GetCallOpts(ctx), validator, common.Big0)
 	if err != nil {
 		utils.Fatal(err)
 	}

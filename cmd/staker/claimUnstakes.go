@@ -41,7 +41,7 @@ func doClaimUnstakes(wallet *eth.Wallet) {
 		utils.Fatal(err)
 	}
 
-	tx, err := stakemanager.ClaimUnstakes(txOpts)
+	tx, err := stakemanager.ClaimUnstakes(txOpts, wallet.From)
 	if err != nil {
 		utils.Fatal(err)
 	}

@@ -47,7 +47,7 @@ func doClaimRewards(wallet *eth.Wallet, validator common.Address) {
 		utils.Fatal(err)
 	}
 
-	tx, err := stakemanager.ClaimRewards(txOpts, validator, common.Big0)
+	tx, err := stakemanager.ClaimRewards(txOpts, wallet.From, validator, common.Big0)
 	if err != nil {
 		utils.Fatal(err)
 	}

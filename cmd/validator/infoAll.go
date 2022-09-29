@@ -47,7 +47,7 @@ func doInfoAll(ec *ethclient.Client, showNextEpoch bool) {
 		utils.Fatal(err)
 	}
 
-	stakermanager, err := contracts.NewStakeManager(ec)
+	stakemanager, err := contracts.NewStakeManager(ec)
 	if err != nil {
 		utils.Fatal(err)
 	}
@@ -60,33 +60,31 @@ func doInfoAll(ec *ethclient.Client, showNextEpoch bool) {
 		epoch.Add(epoch, common.Big1)
 	}
 
-	validators, err := stakermanager.GetValidators(callOpts)
+	validators, _, _, _, err := cmdutils.GetValidators(ctx, stakemanager, epoch)
 	if err != nil {
 		utils.Fatal(err)
 	}
 
 	type info struct {
-		operator       common.Address
-		active         bool
-		jailed         bool
-		stakes         *big.Int
-		commissionRate *big.Int
+		operator common.Address
+		active   bool
+		jailed   bool
+		stakes   *big.Int
 	}
 
 	infos := map[common.Address]*info{}
 	for _, validator := range validators {
-		result1, err := stakermanager.GetValidatorInfo0(callOpts, validator, epoch)
+		result1, err := stakemanager.GetValidatorInfo(callOpts, validator, epoch)
 		if err != nil {
 			utils.Fatal(err)
 		}
 		infos[validator] = &info{
-			active:         result1.Active,
-			jailed:         result1.Jailed,
-			stakes:         result1.Stakes,
-			commissionRate: result1.CommissionRate,
+			active: result1.Active,
+			jailed: result1.Jailed,
+			stakes: result1.Stakes,
 		}
 
-		result2, err := stakermanager.Validators(callOpts, validator)
+		result2, err := stakemanager.Validators(callOpts, validator)
 		if err != nil {
 			utils.Fatal(err)
 		}
@@ -101,7 +99,6 @@ func doInfoAll(ec *ethclient.Client, showNextEpoch bool) {
 		"Total Stake",
 		"Status",
 		"Jailed",
-		"Commission Rate",
 	})
 	for _, owner := range validators {
 		info := infos[owner]
@@ -117,7 +114,6 @@ func doInfoAll(ec *ethclient.Client, showNextEpoch bool) {
 			utils.FormatWei(info.stakes),
 			status,
 			b2s(info.jailed),
-			info.commissionRate.String() + " %",
 		})
 	}
 	table.Render()

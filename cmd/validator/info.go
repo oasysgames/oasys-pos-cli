@@ -57,7 +57,7 @@ func doInfo(ec *ethclient.Client, validator common.Address) {
 		utils.Fatal(err)
 	}
 
-	stakermanager, err := contracts.NewStakeManager(ec)
+	stakemanager, err := contracts.NewStakeManager(ec)
 	if err != nil {
 		utils.Fatal(err)
 	}
@@ -68,17 +68,17 @@ func doInfo(ec *ethclient.Client, validator common.Address) {
 	}
 	nextEpoch := new(big.Int).Add(currentEpoch, common.Big1)
 
-	currentInfo, err := stakermanager.GetValidatorInfo(callOpts, validator)
+	currentInfo, err := stakemanager.GetValidatorInfo(callOpts, validator, currentEpoch)
 	if err != nil {
 		utils.Fatal(err)
 	}
 
-	nextInfo, err := stakermanager.GetValidatorInfo0(callOpts, validator, nextEpoch)
+	nextInfo, err := stakemanager.GetValidatorInfo(callOpts, validator, nextEpoch)
 	if err != nil {
 		utils.Fatal(err)
 	}
 
-	commissions, err := stakermanager.GetCommissions(callOpts, validator, common.Big0)
+	commissions, err := stakemanager.GetCommissions(callOpts, validator, common.Big0)
 	if err != nil {
 		utils.Fatal(err)
 	}
@@ -96,9 +96,7 @@ func doInfo(ec *ethclient.Client, validator common.Address) {
 	fmt.Printf("%s : %s\n", rightPad("Operator Address"), currentInfo.Operator.String())
 	fmt.Printf("%s : %s\n", rightPad("Commissions"), utils.FormatWei(commissions))
 	fmt.Printf("%s : %s\n", rightPad("Current Epoch Staking"), utils.FormatWei(currentInfo.Stakes))
-	fmt.Printf("%s : %s %%\n", rightPad("Current Epoch Commission Rate"), currentInfo.CommissionRate.String())
 	fmt.Printf("%s : %s\n", rightPad("Next Epoch Staking"), utils.FormatWei(nextInfo.Stakes))
-	fmt.Printf("%s : %s %%\n", rightPad("Next Epoch Commission Rate"), nextInfo.CommissionRate.String())
 }
 
 func rightPad(s string) string {

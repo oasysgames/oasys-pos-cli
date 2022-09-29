@@ -42,12 +42,12 @@ func doRewards(ec *ethclient.Client, staker common.Address) {
 
 	callOpts := &bind.CallOpts{Context: ctx}
 
-	stakermanager, err := contracts.NewStakeManager(ec)
+	stakemanager, err := contracts.NewStakeManager(ec)
 	if err != nil {
 		utils.Fatal(err)
 	}
 
-	validators, err := stakermanager.GetValidators(callOpts)
+	validators, _, _, _, err := cmdutils.GetValidators(ctx, stakemanager, common.Big0)
 	if err != nil {
 		utils.Fatal(err)
 	}
@@ -55,7 +55,7 @@ func doRewards(ec *ethclient.Client, staker common.Address) {
 	total := big.NewInt(0)
 	rewards := map[common.Address]*big.Int{}
 	for _, validator := range validators {
-		reward, err := stakermanager.GetRewards(callOpts, staker, validator, common.Big0)
+		reward, err := stakemanager.GetRewards(callOpts, staker, validator, common.Big0)
 		if err != nil {
 			utils.Fatal(err)
 		}

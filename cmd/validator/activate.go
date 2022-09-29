@@ -48,7 +48,7 @@ func doActivate(wallet *eth.Wallet, validator string) {
 		utils.Fatal(err)
 	}
 
-	stakermanager, err := contracts.NewStakeManager(wallet.Client)
+	stakemanager, err := contracts.NewStakeManager(wallet.Client)
 	if err != nil {
 		utils.Fatal(err)
 	}
@@ -60,7 +60,7 @@ func doActivate(wallet *eth.Wallet, validator string) {
 	nextEpoch := new(big.Int).Add(currentEpoch, common.Big1)
 
 	to := common.HexToAddress(validator)
-	result, err := stakermanager.GetValidatorInfo(wallet.GetCallOpts(ctx), to)
+	result, err := stakemanager.GetValidatorInfo(wallet.GetCallOpts(ctx), to, nextEpoch)
 	if err != nil {
 		utils.Fatal(err)
 	} else if result.Active {
@@ -71,7 +71,7 @@ func doActivate(wallet *eth.Wallet, validator string) {
 	if err != nil {
 		utils.Fatal(err)
 	}
-	tx, err := stakermanager.ActivateValidator(txOpts, to, []*big.Int{nextEpoch})
+	tx, err := stakemanager.ActivateValidator(txOpts, to, []*big.Int{nextEpoch})
 	if err != nil {
 		utils.Fatal(err)
 	}
