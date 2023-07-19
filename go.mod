@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/ethereum/go-ethereum v1.10.17
+	github.com/olekukonko/tablewriter v0.0.5
 	github.com/spf13/cobra v1.4.0
 )
 
@@ -18,7 +19,6 @@ require (
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
-	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/rjeczalik/notify v0.9.1 // indirect
 	github.com/shirou/gopsutil v3.21.4-0.20210419000835-c7a38de76ee5+incompatible // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
