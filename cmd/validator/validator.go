@@ -15,6 +15,7 @@ var (
 	commands = []*cobra.Command{
 		joinCmd,
 		infoCmd,
+		infoSlashCmd,
 		infoAllCmd,
 		activateCmd,
 		deactivateCmd,
@@ -40,6 +41,11 @@ func AddCommand(rootCmd *cobra.Command) {
 	// validator:info
 	rootCmd.AddCommand(infoCmd)
 	infoCmd.Flags().String(constants.ValidatorFlag, "", "Address of the validator owner. Default is transaction sender.")
+
+	// validator:info-slash
+	rootCmd.AddCommand(infoSlashCmd)
+	infoSlashCmd.Flags().String(constants.ValidatorFlag, "", "Address of the validator owner. Default is transaction sender.")
+	infoSlashCmd.Flags().Uint16(constants.BackEpochFlag, 10, "This flag determines the number of epochs to go back in order to start listing slashes., with a maximum value of 1024.")
 
 	// validator:info-all
 	rootCmd.AddCommand(infoAllCmd)

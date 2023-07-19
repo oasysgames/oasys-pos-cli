@@ -22,6 +22,7 @@ const (
 	WOASFlag      = "woas"
 	SOASFlag      = "soas"
 	NextEpochFlag = "next-epoch"
+	BackEpochFlag = "back-epoch"
 
 	// Hub-Layer(L1)
 	MainnetRPC     = "https://rpc.mainnet.oasys.games/"
