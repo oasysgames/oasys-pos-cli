@@ -83,6 +83,11 @@ func doInfo(ec *ethclient.Client, validator common.Address) {
 		utils.Fatal(err)
 	}
 
+	slashes, err := stakemanager.GetBlockAndSlashes(callOpts, validator, currentEpoch)
+	if err != nil {
+		utils.Fatal(err)
+	}
+
 	status := "active"
 	if !currentInfo.Active {
 		status = "inactive"
@@ -97,6 +102,7 @@ func doInfo(ec *ethclient.Client, validator common.Address) {
 	fmt.Printf("%s : %s\n", rightPad("Commissions"), utils.FormatWei(commissions))
 	fmt.Printf("%s : %s\n", rightPad("Current Epoch Staking"), utils.FormatWei(currentInfo.Stakes))
 	fmt.Printf("%s : %s\n", rightPad("Next Epoch Staking"), utils.FormatWei(nextInfo.Stakes))
+	fmt.Printf("%s : %s\n", rightPad("Slash"), slashes.Slashes.String())
 }
 
 func rightPad(s string) string {
