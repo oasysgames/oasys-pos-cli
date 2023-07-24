@@ -19,24 +19,30 @@ Name:
   Copyright 2022 Oasys | Blockchain for The Games All Rights Reserved.
   
 Version:
-  1.0.0-alpha2
+  1.0.0
 
 Usage:
   oaspos [command]
 
 Available Commands:
-  completion                       Generate the autocompletion script for the specified shell
-  crypto:create-account            Create a new account.
-  help                             Help about any command
-  staker:stake                     Stake tokens to validator.
-  staker:unstake                   Unstake tokens from validator.
-  validator:activate               Change the validator status to active.
-  validator:claim-commissions      Withdraw validator commissions.
-  validator:deactivate             Change the validator status to disable.
-  validator:info                   Show validator information.
-  validator:join                   Join as a validator in the proof-of-stake.
-  validator:update-commission-rate Update validator commission rates.
-  validator:update-operator        Update the block signing address.
+  completion                  Generate the autocompletion script for the specified shell
+  crypto:create-account       Create a new account.
+  help                        Help about any command
+  staker:claim-rewards        Withdraw staking rewards.
+  staker:claim-unstakes       Withdraw unstaked tokens whose lock period has expired.
+  staker:show-balance         Show token balance.
+  staker:show-rewards         Show balance of staking rewards.
+  staker:show-stakes          Show stake information.
+  staker:stake                Stake tokens to validator.
+  staker:unstake              Unstake tokens from validator.
+  validator:activate          Change the validator status to active.
+  validator:claim-commissions Withdraw validator commissions.
+  validator:deactivate        Change the validator status to disable.
+  validator:info              Show validator information.
+  validator:info-all          Show all validator information.
+  validator:info-slash        List of the number of slashings occurred in each recent epoch
+  validator:join              Join as a validator in the proof-of-stake.
+  validator:update-operator   Update the block signing address.
 
 Flags:
   -h, --help   help for oaspos
