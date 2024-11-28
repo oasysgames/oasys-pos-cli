@@ -9,6 +9,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/spf13/cobra"
 
@@ -97,8 +98,10 @@ func doInfo(ec *ethclient.Client, validator common.Address) {
 
 	fmt.Printf("%s : %s\n", rightPad("Joined"), b2s(joined))
 	fmt.Printf("%s : %s\n", rightPad("Status"), status)
+	fmt.Printf("%s : %s\n", rightPad("Candidate"), b2s(currentInfo.Candidate))
 	fmt.Printf("%s : %s\n", rightPad("Jailed"), b2s(currentInfo.Jailed))
 	fmt.Printf("%s : %s\n", rightPad("Operator Address"), currentInfo.Operator.String())
+	fmt.Printf("%s : %s\n", rightPad("BLS Public Key"), hexutil.Encode(currentInfo.BlsPublicKey))
 	fmt.Printf("%s : %s\n", rightPad("Commissions"), utils.FormatWei(commissions))
 	fmt.Printf("%s : %s\n", rightPad("Current Epoch Staking"), utils.FormatWei(currentInfo.Stakes))
 	fmt.Printf("%s : %s\n", rightPad("Next Epoch Staking"), utils.FormatWei(nextInfo.Stakes))
