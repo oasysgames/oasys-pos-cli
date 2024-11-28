@@ -16,6 +16,7 @@ func GetValidators(
 ) (
 	owners []common.Address,
 	operators []common.Address,
+	blsPublicKeys [][]byte,
 	stakes []*big.Int,
 	candidates []bool,
 	err error,
@@ -28,7 +29,7 @@ func GetValidators(
 	for {
 		result, err := stakemanager.GetValidators(callOpts, epoch, cursor, howMany)
 		if err != nil {
-			return nil, nil, nil, nil, err
+			return nil, nil, nil, nil, nil, err
 		}
 		if len(result.Owners) == 0 {
 			break
@@ -37,6 +38,7 @@ func GetValidators(
 		cursor = result.NewCursor
 		owners = append(owners, result.Owners...)
 		operators = append(operators, result.Operators...)
+		blsPublicKeys = append(blsPublicKeys, result.BlsPublicKeys...)
 		stakes = append(stakes, result.Stakes...)
 		candidates = append(candidates, result.Candidates...)
 	}

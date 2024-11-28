@@ -2,12 +2,12 @@ package validator
 
 import (
 	"context"
-	"math/big"
 	"os"
 	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
@@ -60,35 +60,20 @@ func doInfoAll(ec *ethclient.Client, showNextEpoch bool) {
 		epoch.Add(epoch, common.Big1)
 	}
 
-	validators, _, _, _, err := cmdutils.GetValidators(ctx, stakemanager, epoch)
+	owners, operators, blsPublicKeys, stakes, candidates, err := cmdutils.GetValidators(ctx, stakemanager, epoch)
 	if err != nil {
 		utils.Fatal(err)
 	}
 
-	type info struct {
-		operator common.Address
-		active   bool
-		jailed   bool
-		stakes   *big.Int
-	}
-
-	infos := map[common.Address]*info{}
-	for _, validator := range validators {
-		result1, err := stakemanager.GetValidatorInfo(callOpts, validator, epoch)
+	actives := make([]bool, len(owners))
+	jails := make([]bool, len(owners))
+	for i, owner := range owners {
+		info, err := stakemanager.GetValidatorInfo(callOpts, owner, epoch)
 		if err != nil {
 			utils.Fatal(err)
 		}
-		infos[validator] = &info{
-			active: result1.Active,
-			jailed: result1.Jailed,
-			stakes: result1.Stakes,
-		}
-
-		result2, err := stakemanager.Validators(callOpts, validator)
-		if err != nil {
-			utils.Fatal(err)
-		}
-		infos[validator].operator = result2.Operator
+		actives[i] = info.Active
+		jails[i] = info.Jailed
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
@@ -96,24 +81,26 @@ func doInfoAll(ec *ethclient.Client, showNextEpoch bool) {
 	table.SetHeader([]string{
 		"Owner",
 		"Operator",
+		"BLS Public Key",
 		"Total Stake",
 		"Status",
+		"Candidate",
 		"Jailed",
 	})
-	for _, owner := range validators {
-		info := infos[owner]
-
+	for i, owner := range owners {
 		status := "active"
-		if !info.active {
+		if !actives[i] {
 			status = "inactive"
 		}
 
 		table.Append([]string{
 			owner.String(),
-			info.operator.String(),
-			utils.FormatWei(info.stakes),
+			operators[i].String(),
+			hexutil.Encode(blsPublicKeys[i]),
+			utils.FormatWei(stakes[i]),
 			status,
-			b2s(info.jailed),
+			b2s(candidates[i]),
+			b2s(jails[i]),
 		})
 	}
 	table.Render()

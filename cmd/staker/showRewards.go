@@ -47,7 +47,7 @@ func doRewards(ec *ethclient.Client, staker common.Address) {
 		utils.Fatal(err)
 	}
 
-	validators, _, _, _, err := cmdutils.GetValidators(ctx, stakemanager, common.Big0)
+	validators, _, _, _, _, err := cmdutils.GetValidators(ctx, stakemanager, common.Big0)
 	if err != nil {
 		utils.Fatal(err)
 	}
